@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+      "target": "es5",
+      "module": "commonjs",
+      "outDir": "./dist",
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "lib": ["esnext", "dom"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "test/*"],
+}

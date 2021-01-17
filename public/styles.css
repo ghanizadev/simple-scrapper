@@ -1,0 +1,76 @@
+html, body {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Antic Slab', serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+a {
+    color: #000000;
+}
+
+#root {
+    flex: 1;
+    background: url("./assets/background.png");
+    background-size: contain;
+    display: flex;
+    flex-direction: column;
+}
+
+#content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 80px;
+}
+
+#title {
+    font-size: 5.75rem;
+}
+
+#subtitle {
+    font-size: 2.88rem;
+}
+
+#author {
+    font-size: 1.8rem;
+    padding: 30px;
+}
+
+#author p {
+    margin: 0;
+}
+
+#download {
+    background: #F4A594;
+    border: 1px dashed #000000;
+    box-sizing: border-box;
+    box-shadow: 1px 1px 15px 5px rgba(0, 0, 0, 0.25);
+    width: 320px;
+    height: 94px;
+    font-size: 3rem;
+    text-transform: uppercase;
+    font-family: 'Antic Slab', serif;
+    transition: transform 250ms ease-out;
+    cursor: pointer;
+}
+
+#download:hover {
+    transform: scale(1.05);
+}
+
+#download:disabled {
+    background: lightgay;
+}

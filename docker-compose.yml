@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  redis:
+    image: "redis:6.0.9-alpine"
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis
+    ports: 
+      - "6378:6379"
+    networks:
+      - redis-net
+    volumes:
+      - redis-data:/data
+    logging:
+      driver: none
+
+  crawler-service:
+    image: crawler-service:0.1.0
+    build:
+      context: "."
+    ports:
+      - "8080:8080"
+    networks:
+      - redis-net
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PORT=8080
+      - NODE_ENV=production
+    depends_on: 
+      - redis
+
+volumes:
+  redis-data:
+networks:
+  redis-net:
