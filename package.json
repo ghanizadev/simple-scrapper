@@ -7,6 +7,7 @@
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js",
     "build": "npx tsc",
+    "prestart": "npx tsc",
     "debug": "node --inspect -r ts-node/register src/index.ts "
   },
   "devDependencies": {

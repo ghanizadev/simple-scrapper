@@ -15,7 +15,7 @@ Table of Contents:
 - [Shop Scraper](#shop-scraper)
   - [How to run](#how-to-run)
     - [I am using Docker](#i-am-using-docker)
-  - [I don't have Docker](#i-dont-have-docker)
+    - [I don't have Docker](#i-dont-have-docker)
   - [Project](#project)
     - [First ideas](#first-ideas)
     - [The case](#the-case)
@@ -41,7 +41,7 @@ To run this project in your machine:
 
 If you already have this image built, you can simply run `docker-compose up`.
 
-## I don't have Docker
+### I don't have Docker
 
 This project requires an insnce of Redis to run.
 The following environment variables are required:

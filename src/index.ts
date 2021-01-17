@@ -14,6 +14,7 @@ app.use(express.text());
 app.use(router);
 app.use(error);
 
-app.listen(8080, () => {
-  console.log("Server started at http://localhost:8080");
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log("Server started at http://localhost:%s", port);
 });
