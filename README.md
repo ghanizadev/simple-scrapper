@@ -21,7 +21,7 @@ Table of Contents:
     - [The case](#the-case)
     - [The project](#the-project)
     - [The TDD](#the-tdd)
-    - [The analisys](#the-analisys)
+    - [The analysis](#the-analysis)
     - [Building the scrapper](#building-the-scrapper)
     - [Improvements](#improvements)
     - [Problems/Bugs](#problemsbugs)
@@ -90,7 +90,7 @@ I started the project quite delayed due to another tasks and when I started to m
 
 I usually start defining the behaviour of the software and to keep in the plan I write tests. Because of this lack of project, I skipped this part.
 
-### The analisys
+### The analysis
 
 I defined that the crawler should be simple. Because of this, the best approach was read the DOM using Puppeteer.
 I openned the website to analyse how should I capture the elements, and the first things I noticed was that it was using a platform called WooCommerce and it was rendered in server-side (if it was dynamic, I could see if there is any open API in use). After reading about the platform, I dicovered that it uses a shared CSS (woocommercee.css) file with base classes to all clients in the platform.

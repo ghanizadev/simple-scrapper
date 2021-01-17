@@ -4,8 +4,8 @@ const url = "https://demo-shop.natek.eu";
 
 /**
  * For a product in the page, returns its attributes
- * @param {puppeteer.Page} page Page instance
- * @return {Promise} Product variations
+ * @param  page Page instance
+ * @return  Product variations
  */
 const getAttributes = async (page: puppeteer.Page) =>
   await page.evaluate(() => {
@@ -28,8 +28,8 @@ const getAttributes = async (page: puppeteer.Page) =>
 
 /**
  * Get all variation identifiers from a product
- * @param {puppeteer.Page} page Page instance
- * @return {Promise} List of IDs
+ * @param  page Page instance
+ * @return  List of IDs
  */
 const getSelectIds = async (page: puppeteer.Page) =>
   await page.evaluate(() => {
@@ -43,9 +43,9 @@ const getSelectIds = async (page: puppeteer.Page) =>
 
 /**
  * Get all options from a select fiels by its ID
- * @param {string} id Field ID
- * @param {puppeteer.Page} page Page instance
- * @return {Promise} List of options
+ * @param  id Field ID
+ * @param  page Page instance
+ * @return  List of options
  */
 const getOptions = async (id: string, page: puppeteer.Page) =>
   await page.evaluate((id) => {
@@ -59,7 +59,7 @@ const getOptions = async (id: string, page: puppeteer.Page) =>
 
 /**
  * Clear variation inputs
- * @param {puppeteer.Page} page Page instance
+ * @param  page Page instance
  */
 const clear = async (page: puppeteer.Page) =>
   await page.evaluate(() => {
@@ -71,9 +71,9 @@ const clear = async (page: puppeteer.Page) =>
 
 /**
  * Get all properties from a product by its name. Case it has variations, return all variations too.
- * @param {puppeteer.Browser} browser Puppeteer browser isntance;
- * @param {string} name Product name
- * @return {Promise} Array of products
+ * @param  browser Puppeteer browser isntance;
+ * @param  name Product name
+ * @return  Array of products
  */
 async function getProductInfo(browser: puppeteer.Browser, name: string) {
   const page = await browser.newPage();
@@ -102,9 +102,9 @@ async function getProductInfo(browser: puppeteer.Browser, name: string) {
 
 /**
  * Get all variations of the product in the page
- * @param {string[]} selects Select IDS
- * @param {puppeteer.Page} page Page instance
- * @return {Array} Array of products
+ * @param  selects Select IDS
+ * @param  page Page instance
+ * @return  Array of products
  */
 async function getAllVariations(selects: string[], page: puppeteer.Page) {
   const products: any[] = [];
@@ -177,8 +177,8 @@ async function getAllVariations(selects: string[], page: puppeteer.Page) {
 
 /**
  * Get product properties
- * @param {puppeteer.Page} page Page instance
- * @return {Promise} Product with properties
+ * @param  page Page instance
+ * @return  Product with properties
  */
 async function getProductProperties(page: puppeteer.Page): Promise<any> {
   const properties: any = {};
@@ -278,8 +278,8 @@ async function getProductProperties(page: puppeteer.Page): Promise<any> {
 
 /**
  * Get list of products names
- * @param {puppeteer.Browser} browser Browser instance
- * @return {string[]} Array of product names
+ * @param  browser Browser instance
+ * @return  Array of product names
  */
 async function getAllProductNames(browser: puppeteer.Browser) {
   let titles: string[] = [];
