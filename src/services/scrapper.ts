@@ -2,7 +2,12 @@ import puppeteer from "puppeteer";
 
 const url = "https://demo-shop.natek.eu";
 
-const getVariation = async (page: puppeteer.Page) =>
+/**
+ * For a product in the page, returns its attributes
+ * @param {puppeteer.Page} page Page instance
+ * @return {Promise} Product variations
+ */
+const getAttributes = async (page: puppeteer.Page) =>
   await page.evaluate(() => {
     const table = document.querySelector("table.variations")!;
 
@@ -21,6 +26,11 @@ const getVariation = async (page: puppeteer.Page) =>
     });
   });
 
+/**
+ * Get all variation identifiers from a product
+ * @param {puppeteer.Page} page Page instance
+ * @return {Promise} List of IDs
+ */
 const getSelectIds = async (page: puppeteer.Page) =>
   await page.evaluate(() => {
     const table = document.querySelector("table.variations")!;
@@ -31,6 +41,12 @@ const getSelectIds = async (page: puppeteer.Page) =>
     });
   });
 
+/**
+ * Get all options from a select fiels by its ID
+ * @param {string} id Field ID
+ * @param {puppeteer.Page} page Page instance
+ * @return {Promise} List of options
+ */
 const getOptions = async (id: string, page: puppeteer.Page) =>
   await page.evaluate((id) => {
     const options = document.querySelectorAll<HTMLOptionElement>(
@@ -41,6 +57,10 @@ const getOptions = async (id: string, page: puppeteer.Page) =>
       .map((opt) => opt.value);
   }, id);
 
+/**
+ * Clear variation inputs
+ * @param {puppeteer.Page} page Page instance
+ */
 const clear = async (page: puppeteer.Page) =>
   await page.evaluate(() => {
     const button = document.querySelector<HTMLLinkElement>(
@@ -49,6 +69,12 @@ const clear = async (page: puppeteer.Page) =>
     button && button.click();
   });
 
+/**
+ * Get all properties from a product by its name. Case it has variations, return all variations too.
+ * @param {puppeteer.Browser} browser Puppeteer browser isntance;
+ * @param {string} name Product name
+ * @return {Promise} Array of products
+ */
 async function getProductInfo(browser: puppeteer.Browser, name: string) {
   const page = await browser.newPage();
   const formatedName = name.replace(new RegExp(" ", "gi"), "-").toLowerCase();
@@ -64,17 +90,22 @@ async function getProductInfo(browser: puppeteer.Browser, name: string) {
   if (!vary) {
     const properties = await getProductProperties(page);
     await page.close();
-    return [{name, ...properties}];
+    return [{ name, ...properties }];
   } else {
     const selects = await getSelectIds(page);
 
     const result = await getAllVariations(selects, page);
     await page.close();
-    return result.map(m => ({name, ...m}));
+    return result.map((m) => ({ name, ...m }));
   }
-
 }
 
+/**
+ * Get all variations of the product in the page
+ * @param {string[]} selects Select IDS
+ * @param {puppeteer.Page} page Page instance
+ * @return {Array} Array of products
+ */
 async function getAllVariations(selects: string[], page: puppeteer.Page) {
   const products: any[] = [];
 
@@ -113,23 +144,29 @@ async function getAllVariations(selects: string[], page: puppeteer.Page) {
     const valueA = combination[0];
     const valueB = combination[1];
 
-    const setA = s.find(item => item.options.includes(valueA))!;
-    const setB = s.find(item => item.options.includes(valueB))!;
+    const setA = s.find((item) => item.options.includes(valueA))!;
+    const setB = s.find((item) => item.options.includes(valueB))!;
 
-    const hasValues= await page.evaluate((valueA, valueB) => {
-      return !!document.querySelector(`option[value="${valueA}"`)
-          && !!document.querySelector(`option[value="${valueB}"`);
-    }, valueA, valueB);
+    const hasValues = await page.evaluate(
+      (valueA, valueB) => {
+        return (
+          !!document.querySelector(`option[value="${valueA}"`) &&
+          !!document.querySelector(`option[value="${valueB}"`)
+        );
+      },
+      valueA,
+      valueB
+    );
 
-    if(!hasValues) return;
-    
+    if (!hasValues) return;
+
     await page.select("#" + setA.label, valueA);
     await page.select("#" + setB.label, valueB);
-    
+
     return getProductProperties(page);
   };
 
-  for(let i = 0; i < possibilities.length; i++){
+  for (let i = 0; i < possibilities.length; i++) {
     const product = await getCombination(possibilities[i]);
     products.push(product);
     await clear(page);
@@ -138,6 +175,11 @@ async function getAllVariations(selects: string[], page: puppeteer.Page) {
   return products;
 }
 
+/**
+ * Get product properties
+ * @param {puppeteer.Page} page Page instance
+ * @return {Promise} Product with properties
+ */
 async function getProductProperties(page: puppeteer.Page): Promise<any> {
   const properties: any = {};
 
@@ -206,32 +248,39 @@ async function getProductProperties(page: puppeteer.Page): Promise<any> {
 
     return !!ins ? ins.textContent?.trim() : element.textContent?.trim();
   });
-  
+
   const vary = await page.evaluate(() => {
     return !!document.querySelector("table.variations");
   });
-  
+
   if (vary) {
-    properties.attributes = await getVariation(page);
+    properties.attributes = await getAttributes(page);
   } else {
     properties.attributes = "N/A";
   }
-  
+
   properties.related = await page.evaluate(() => {
     let element = document.querySelector("section.related.products");
 
     if (!element) return "N/A";
 
-    const products = element.querySelectorAll("h2.woocommerce-loop-product__title");
+    const products = element.querySelectorAll(
+      "h2.woocommerce-loop-product__title"
+    );
 
-    return Array.from(products).map(p => {
+    return Array.from(products).map((p) => {
       return p.textContent.trim();
     });
   });
-  
+
   return properties;
 }
 
+/**
+ * Get list of products names
+ * @param {puppeteer.Browser} browser Browser instance
+ * @return {string[]} Array of product names
+ */
 async function getAllProductNames(browser: puppeteer.Browser) {
   let titles: string[] = [];
   console.info("Gathering product names");
@@ -276,13 +325,15 @@ async function getAllProductNames(browser: puppeteer.Browser) {
 
 export default {
   async execute() {
-    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
 
     const productNames = await getAllProductNames(browser);
 
     console.info("Searching by product name");
     let result: any[] = [];
-    for(let i = 0; i < productNames.length; i++){
+    for (let i = 0; i < productNames.length; i++) {
       const info = await getProductInfo(browser, productNames[i]);
       result = [...result, ...info];
     }
@@ -291,10 +342,10 @@ export default {
     console.info("Updating related SKUs");
     result = result.map((item, _, arr) => {
       const relatedNames = item.related;
-      if(relatedNames === "N/A") return item;
+      if (relatedNames === "N/A") return item;
 
-      item.related = relatedNames.map(related => {
-        const eq = arr.find(i => i.name === related)!;
+      item.related = relatedNames.map((related) => {
+        const eq = arr.find((i) => i.name === related)!;
         return eq.sku;
       });
 

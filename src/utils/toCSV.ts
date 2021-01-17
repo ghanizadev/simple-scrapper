@@ -60,7 +60,6 @@ export default {
             value = JSON.stringify(value);
 
         value = value.replace(RegExp('"', "gi"), '""');
-        // .replace(RegExp(",", "gi"), "\",\"");
 
         line.push(`"${value}"`);
       });
